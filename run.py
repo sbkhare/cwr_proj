@@ -12,9 +12,9 @@ from scipy.optimize import curve_fit
 import pickle as pkl
 from mpl_toolkits.mplot3d import Axes3D
 
-SINGLE_RUN = 1
+SINGLE_RUN = 0
 BETA_DISTR = 0
-SURVIVALPROB = 0
+SURVIVALPROB = 1
 P_SURFACE_PLOT = 0
 
 
@@ -22,12 +22,12 @@ def F(n, Q):
     return 1 - Q**n
 
 def calc_survival_prob(b0_res, b0_mut, d, mu, save=False):
-    N_list = np.arange(1000, 30000, 1000, dtype=int)
+    N_list = np.arange(500, 10500, 2000, dtype=int)
     K_list = b0_mut*N_list/(b0_mut - d)
     num_trials = 1000
     survival_prob = {} #pkl.dump
     for K, N in zip(K_list, N_list):
-        print(">>>    K = ", K, ", N = ", N)
+        print(">>>    K = ", K, ", N* = ", N)
         Kvec = K*np.ones(num_trials, dtype=float) 
         comm = cwr.community(Kvec, timesteps=200, change="b", dd="b", r=d, res=b0_res, mut=b0_mut, mu=mu)
         comm.simulate_ddb()
@@ -56,9 +56,9 @@ if SINGLE_RUN == 1:
     d_all = 0.1
     mu_all = 0.0002
     
-    num_species = 247
+    num_species = 501
     
-    K_global = 23756 #750 # #106 #
+    K_global = 3306#750 # #106 #
     
     #Same K
 #    N_vec = K_global*np.ones(num_species, dtype=int) 
@@ -67,7 +67,7 @@ if SINGLE_RUN == 1:
 #    N_vec = np.random.lognormal(4.15, 2, num_species) #5, 2
     
     #Beta
-    N_vec = K_global*np.random.beta(0.2538, 0.2538, num_species)
+    N_vec = K_global*np.random.beta(0.9877, 493.8308, num_species)
     
     #Turn N_vec into K_vec
     K_vec = b0_m*N_vec/(b0_m - d_all)

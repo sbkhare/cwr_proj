@@ -51,9 +51,9 @@ class community():
                 if len(species) == 0:
                     self.extinction_time[i] = stepnumber - 1
             for j, indiv in enumerate(species): #iterates through the specieis individual list
-                b_i = indiv*(1 - N_i/self.K[i])
+                b_i = max(indiv*(1 - N_i/self.K[i]), 0) #birth rate can't be lower than 0
                 if np.random.rand() < b_i: #if random number is less than b0
-                    if indiv == self.b0_res and np.random.rand() < self.mu:
+                    if indiv == self.b0_res and np.random.rand() < self.mu: #mutation conditional on birth of a resident
                         new_indiv.append(self.b0_mut)
                         if i not in self.first_mut: #If species index isnt in the dct, add it with stepnumvber as the value
                             self.first_mut[i] = stepnumber
@@ -136,38 +136,40 @@ class community():
     
     def plot_diversity(self, save=False):
         plt.figure()
-        plt.subplot(131)
+        plt.subplot(121)
         plt.plot(np.arange(self.timesteps+1), self.H_t, 'k')
         plt.xlabel("Timestep")
         plt.ylabel("Shannon's diversity index")
-        plt.subplot(132)
+        plt.subplot(122)
         plt.plot(np.arange(self.timesteps+1), self.J_t, 'k')
         plt.xlabel("Timestep")
         plt.ylabel("Pielou's evenness index")
+        
         #Calculate rarity gain
-        N_0 = []
-        N_f = []
-        for Ni1, Ni2 in zip(self.N_t[:,0], self.N_t[:,-1]):
-            if Ni1 > 0 and Ni2 > 0:
-                N_0.append(Ni1)
-                N_f.append(Ni2)
-        N_0 = np.array(N_0)
-        rank_0 = sorted(range(len(N_0)), reverse=True, key=lambda k: N_0[k]) #sorts species indices by descending order of abundance at t=0
-        N_f = np.array(N_f)
-        tot_0 = np.sum(N_0)
-        tot_f = np.sum(N_f)
-        p_0 = N_0/tot_0
-        p_f = N_f/tot_f
-        rarity_change = np.log(p_f) - np.log(p_0)
-        Tau = np.sum(p_f*rarity_change)
-        del_rar = []
-        for index in rank_0:
-            del_rar.append(rarity_change[index])
-        plt.subplot(133)
-        plt.bar(range(len(rank_0)), del_rar)
-        plt.title("Rarity/information gain = " + str(Tau))
-        plt.xlabel("Species ranked according to initial abundance")
-        plt.ylabel("Change in rarity")
+        # N_0 = []
+        # N_f = []
+        # for Ni1, Ni2 in zip(self.N_t[:,0], self.N_t[:,-1]):
+        #     if Ni1 > 0 and Ni2 > 0:
+        #         N_0.append(Ni1)
+        #         N_f.append(Ni2)
+        # N_0 = np.array(N_0)
+        # rank_0 = sorted(range(len(N_0)), reverse=True, key=lambda k: N_0[k]) #sorts species indices by descending order of abundance at t=0
+        # N_f = np.array(N_f)
+        # tot_0 = np.sum(N_0)
+        # tot_f = np.sum(N_f)
+        # p_0 = N_0/tot_0
+        # p_f = N_f/tot_f
+        # rarity_change = np.log(p_f) - np.log(p_0)
+        # Tau = np.sum(p_f*rarity_change)
+        # del_rar = []
+        # for index in rank_0:
+        #     del_rar.append(rarity_change[index])
+        # plt.subplot(133)
+        # plt.bar(range(len(rank_0)), del_rar)
+        # plt.title("Rarity/information gain = " + str(Tau))
+        # plt.xlabel("Species ranked according to initial abundance")
+        # plt.ylabel("Change in rarity")
+        
         if save:
             plt.savefig("single_run/diversity_evenness.png")
         
