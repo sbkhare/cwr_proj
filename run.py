@@ -12,9 +12,9 @@ from scipy.optimize import curve_fit
 import pickle as pkl
 from mpl_toolkits.mplot3d import Axes3D
 
-SINGLE_RUN = 0
+SINGLE_RUN = 1
 BETA_DISTR = 0
-SURVIVALPROB = 1
+SURVIVALPROB = 0
 P_SURFACE_PLOT = 0
 
 
@@ -54,11 +54,11 @@ if SINGLE_RUN == 1:
     b0_r = 0.05
     b0_m = 0.9 #0.2, 0.4, 0.6, 0.8
     d_all = 0.1
-    mu_all = 0.0002
+    mu_all = 0.05
     
-    num_species = 501
+    num_species = 167
     
-    K_global = 3306#750 # #106 #
+    K_global = 16936#750 # #106 #
     
     #Same K
 #    N_vec = K_global*np.ones(num_species, dtype=int) 
@@ -67,7 +67,7 @@ if SINGLE_RUN == 1:
 #    N_vec = np.random.lognormal(4.15, 2, num_species) #5, 2
     
     #Beta
-    N_vec = K_global*np.random.beta(0.9877, 493.8308, num_species)
+    N_vec = K_global*np.random.beta(0.2498, 41.4668, num_species)
     
     #Turn N_vec into K_vec
     K_vec = b0_m*N_vec/(b0_m - d_all)
@@ -75,22 +75,24 @@ if SINGLE_RUN == 1:
     
     c = cwr.community(K=K_vec, timesteps=200, change="b", dd="b", r=d_all, res=b0_r, mut=b0_m, mu=mu_all)
     c.simulate_ddb()
-    c.plot(save=True)
-    c.plot_diversity(save=True)
-    c.mutation_extinction(save=True)
-#    c.compare_rankabundance()
-    c.RAC(0, save=True)
-    c.RAC(50, save=True)
-    c.RAC(100, save=True)
-    c.RAC(150, save=True)
-    c.RAC(200, save=True)
-#    c.RAC(250)
-    c.species_abundance(0, save=True)
-    c.species_abundance(50, save=True)
-    c.species_abundance(100, save=True)
-    c.species_abundance(150, save=True)
-    c.species_abundance(200, save=True)
-#    c.species_abundance(250)
+    
+#     c.plot(save=True)
+#     c.plot_diversity(save=True)
+#     c.mutation_extinction(save=True)
+# #    c.compare_rankabundance()
+#     c.RAC(0, save=True)
+#     c.RAC(50, save=True)
+#     c.RAC(100, save=True)
+#     c.RAC(150, save=True)
+#     c.RAC(200, save=True)
+# #    c.RAC(250)
+#     c.species_abundance(0, save=True)
+#     c.species_abundance(50, save=True)
+#     c.species_abundance(100, save=True)
+#     c.species_abundance(150, save=True)
+#     c.species_abundance(200, save=True)
+# #    c.species_abundance(250)
+    c.plot_fig2([0,50,100,150,200])
     
     
     
