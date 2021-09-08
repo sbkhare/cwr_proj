@@ -52,9 +52,9 @@ def calc_survival_prob(b0_res, b0_mut, d, mu, save=False):
 
 if SINGLE_RUN == 1:
     b0_r = 0.05
-    b0_m = 0.9 #0.2, 0.4, 0.6, 0.8
-    d_all = 0.1
-    mu_all = 0.05
+    b0_m = 0.6 #0.2, 0.4, 0.6, 0.8
+    d_all = 1-np.exp(-0.1)
+    mu_all = 1-np.exp(-0.0002)
     
     num_species = 167
     

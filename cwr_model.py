@@ -41,27 +41,59 @@ class community():
         
         
     def step_ddb(self, stepnumber): #ddb = density dependence on birth
+        # print("t = " + str(stepnumber))
+        # new_species_vector = np.zeros(len(self.K), dtype=object)
+        # for i, species in enumerate(self.species_vector):
+        #     N_i = len(species)
+        #     new_indiv = []
+        #     dead_indiv = []
+        #     if i not in self.extinction_time:
+        #         if len(species) == 0:
+        #             self.extinction_time[i] = stepnumber - 1
+        #     for j, indiv in enumerate(species): #iterates through the specieis individual list
+        #         b_i = max(indiv*(1 - N_i/self.K[i]), 0) #birth rate can't be lower than 0
+        #         if np.random.rand() < b_i: #if random number is less than b0
+        #             if indiv == self.b0_res and np.random.rand() < self.mu: #mutation conditional on birth of a resident
+        #                 new_indiv.append(self.b0_mut)
+        #                 if i not in self.first_mut: #If species index isnt in the dct, add it with stepnumvber as the value
+        #                     self.first_mut[i] = stepnumber
+        #             else:
+        #                 new_indiv.append(indiv)
+        #         if np.random.rand() < self.d:
+        #             dead_indiv.append(j) #records list index of dead individual
+        #     new_species_vector[i] = self.species_vector[i] + new_indiv
+        #     for index in sorted(dead_indiv, reverse=True): #Pops dead individuals from list in descending order of index so that lower indices are not changed after pop
+        #         new_species_vector[i].pop(index)
+        # self.species_vector = new_species_vector
+        # for i, species in enumerate(self.species_vector):
+        #     self.N_t[i, stepnumber] = len(species) #Records species poulations at stepnumber
+        # H, J = self.diversity_evenness(stepnumber)
+        # self.H_t[stepnumber] = H
+        # self.J_t[stepnumber] = J
+        
         print("t = " + str(stepnumber))
         new_species_vector = np.zeros(len(self.K), dtype=object)
         for i, species in enumerate(self.species_vector):
             N_i = len(species)
             new_indiv = []
             dead_indiv = []
+            mutated_indiv = []
             if i not in self.extinction_time:
                 if len(species) == 0:
                     self.extinction_time[i] = stepnumber - 1
             for j, indiv in enumerate(species): #iterates through the specieis individual list
-                b_i = max(indiv*(1 - N_i/self.K[i]), 0) #birth rate can't be lower than 0
+                b_i = indiv*(1 - N_i/self.K[i])
+                if np.random.rand() < self.mu:
+                    mutated_indiv.append(j)
+                    if i not in self.first_mut: #If species index isnt in the dct, add it with stepnumvber as the value
+                        self.first_mut[i] = stepnumber
                 if np.random.rand() < b_i: #if random number is less than b0
-                    if indiv == self.b0_res and np.random.rand() < self.mu: #mutation conditional on birth of a resident
-                        new_indiv.append(self.b0_mut)
-                        if i not in self.first_mut: #If species index isnt in the dct, add it with stepnumvber as the value
-                            self.first_mut[i] = stepnumber
-                    else:
-                        new_indiv.append(indiv)
+                    new_indiv.append(indiv)
                 if np.random.rand() < self.d:
                     dead_indiv.append(j) #records list index of dead individual
             new_species_vector[i] = self.species_vector[i] + new_indiv
+            for index in mutated_indiv: #Replaces individual if muated
+                new_species_vector[i][index] = self.b0_mut
             for index in sorted(dead_indiv, reverse=True): #Pops dead individuals from list in descending order of index so that lower indices are not changed after pop
                 new_species_vector[i].pop(index)
         self.species_vector = new_species_vector
