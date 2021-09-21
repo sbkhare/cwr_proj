@@ -260,36 +260,36 @@ class community():
 #        plt.title("R-squared: {0}, p-value: {1}".format(round(res.rvalue**2, 3), res.pvalue**2))
 
     def plot_fig2(self, times, save=False): 
-            plt.figure(figsize=(7, 3), dpi=80)
-            plt.subplot(121)
-            plt.xlabel("Timestep")
-            plt.ylabel("Species abundance")
-            for species in self.N_t:
-                plt.plot(np.arange(self.timesteps+1), species)
-            plt.subplot(122)
-            rank = np.arange(1, len(self.K)+1)
-            for t in times:
-                abundance = self.N_t[:,t]
-                plt.plot(rank, sorted(abundance, reverse=True), linewidth=5, label="t = {0}".format(t))
-                plt.xlabel("Rank")
-                plt.ylabel("Abundance")
-                plt.yscale("log")
-            plt.legend()
-            plt.tight_layout()
-            if save:
-                plt.savefig("single_run/fig2_top.png")
-            plt.figure(figsize=(7, 3), dpi=80)
-            plt.subplot(121)
-            plt.plot(np.arange(self.timesteps+1), self.H_t, 'k')
-            plt.xlabel("Timestep")
-            plt.ylabel("Diversity")
-            plt.subplot(122)
-            plt.plot(np.arange(self.timesteps+1), self.J_t, 'k')
-            plt.xlabel("Timestep")
-            plt.ylabel("Evenness")
-            plt.tight_layout()
-            if save:
-                plt.savefig("single_run/fig2_bottom.png")
+        fig = plt.figure(figsize=(7, 6), dpi=80)
+        ax1 = fig.add_subplot(2, 2, 1)
+        ax1.text(-0.1, 1.15, "a", transform=ax1.transAxes, fontsize=16, fontweight='bold', va='top', ha='right')
+        ax1.set_xlabel("Timestep")
+        ax1.set_ylabel("Species abundance")
+        for species in self.N_t:
+            ax1.plot(np.arange(self.timesteps+1), species)
+        ax2 = fig.add_subplot(2, 2, 2)
+        ax2.text(-0.1, 1.15, "b", transform=ax2.transAxes, fontsize=16, fontweight='bold', va='top', ha='right')
+        rank = np.arange(1, len(self.K)+1)
+        for t in times:
+            abundance = self.N_t[:,t]
+            ax2.plot(rank, sorted(abundance, reverse=True), linewidth=5, label="t = {0}".format(t))
+            ax2.set_xlabel("Rank")
+            ax2.set_ylabel("Abundance")
+            ax2.set_yscale("log")
+        ax2.legend()
+        ax3 = fig.add_subplot(2, 2, 3)
+        ax3.text(-0.1, 1.15, "c", transform=ax3.transAxes, fontsize=16, fontweight='bold', va='top', ha='right')
+        ax3.plot(np.arange(self.timesteps+1), self.H_t, 'k')
+        ax3.set_xlabel("Timestep")
+        ax3.set_ylabel("Diversity")
+        ax4 = fig.add_subplot(2, 2, 4)
+        ax4.text(-0.1, 1.15, "d", transform=ax4.transAxes, fontsize=16, fontweight='bold', va='top', ha='right')
+        ax4.plot(np.arange(self.timesteps+1), self.J_t, 'k')
+        ax4.set_xlabel("Timestep")
+        ax4.set_ylabel("Evenness")
+        plt.tight_layout()
+        if save:
+            plt.savefig("single_run/fig2.png")
         
                 
 if __name__=='__main__':

@@ -11,11 +11,13 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import pickle as pkl
 from mpl_toolkits.mplot3d import Axes3D
+import matplotlib as mpl
 
-SINGLE_RUN = 1
+
+SINGLE_RUN = 0
 BETA_DISTR = 0
 SURVIVALPROB = 0
-P_SURFACE_PLOT = 0
+P_SURFACE_PLOT = 1
 
 
 def F(n, Q):
@@ -92,7 +94,7 @@ if SINGLE_RUN == 1:
 #     c.species_abundance(150, save=True)
 #     c.species_abundance(200, save=True)
 # #    c.species_abundance(250)
-    c.plot_fig2([0,50,100,150,200])
+    c.plot_fig2([0,50,100,150,200], save=True)
     
     
     
@@ -134,30 +136,78 @@ if SURVIVALPROB == 1:
 #    P = 1-popt[0]
 #    plt.title("Rescue probability = 1 - $(1 - P)^n$, where P = " + str(round(P, 4)))
 #    plt.grid()
+    
     calc_survival_prob(b0_r, b0_m, d_all, mu_all, save=True)
     
 if P_SURFACE_PLOT == 1:
     b0_r = 0.05
     mu_ = 0.0002
-    bm_list = np.arange(0.1, 1, 0.1)
-    d_list = np.arange(0.1, 1, 0.1)
+    bm_list = np.arange(0.06, 1.01, 0.05)
+    d_list = np.arange(0.05, 1, 0.05)
     D, B = np.meshgrid(d_list, bm_list)
-    P_grid = np.zeros((len(d_list), len(bm_list)), dtype=float)
-    for i, bm in enumerate(bm_list):
-        for j, d_ in enumerate(d_list):
-            print("b0_mut = {0}, d = {1}".format(bm, d_))
-            if d_ >= bm:
-                P_grid[i,j] = 0
-            else:
-                P = calc_survival_prob(b0_r, bm, d_, mu_, save=True)
+    # P_grid = np.zeros((len(d_list), len(bm_list)), dtype=float)
+    
+    
+    # for i, bm in enumerate(bm_list):
+    #     for j, d_ in enumerate(d_list):
+    #         print("b0_mut = {0}, d = {1}".format(bm, d_))
+    #         if d_ >= bm:
+    #             P_grid[i,j] = 0
+    #         else:
+    #             P = calc_survival_prob(b0_r, bm, d_, mu_, save=True)
+    #             P_grid[i,j] = P
+    
+    
+    fig = plt.figure(figsize=(7, 3), dpi=80)
+    u_list = np.arange(0.0001, 0.0005, 0.0001)
+    br_list = np.arange(0.01, 0.05, 0.01)
+    ax1 = fig.add_subplot(1, 2, 1, projection='3d')
+    ax1.text2D(-0.1, 1.15, s="a", transform=ax1.transAxes, fontsize=16, fontweight='bold', va='top', ha='right')
+    for k, u in enumerate(u_list):
+        P_grid = np.zeros((len(d_list), len(bm_list)), dtype=float)
+        for i, bm in enumerate(bm_list):
+           for j, d_ in enumerate(d_list):
+                r0 = b0_r/d_
+                r0_star = bm/d_
+                p_star = 1 - 1/r0_star
+                P = u*r0*p_star/(1 - r0)    
+                if P < 0:
+                    P = 0
                 P_grid[i,j] = P
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    ax.plot_surface(D, B, P_grid) 
-    ax.set_xlabel('d')
-    ax.set_ylabel("$b_{0,m}$")
-    ax.set_zlabel('P')
+        ax1.plot_surface(D, B, P_grid, label="${\mu}$ = " + str(u)) # c = 
+        # c._facecolors2d=c._facecolors3d
+        # c._edgecolors2d=c._edgecolors3d
+    ax1.set_xlabel('d', fontsize=16)
+    ax1.set_ylabel("$b_{0,m}$", fontsize=16)
+    ax1.set_zlabel('P', fontsize=16)
+    # ax1.legend()
+    ax2 = fig.add_subplot(1, 2, 2, projection='3d')
+    ax2.text2D(1.5, 1.15, "b", transform=ax1.transAxes, fontsize=16, fontweight='bold', va='top', ha='right')
+    for k, br in enumerate(br_list):
+        P_grid = np.zeros((len(d_list), len(bm_list)), dtype=float)
+        for i, bm in enumerate(bm_list):
+           for j, d_ in enumerate(d_list):
+                r0 = br/d_
+                r0_star = bm/d_
+                p_star = 1 - 1/r0_star
+                P = mu_*r0*p_star/(1 - r0)    
+                if P < 0:
+                    P = 0
+                P_grid[i,j] = P
+        ax2.plot_surface(D, B, P_grid, label="$b_{r}$ = " + str(br)) #c = 
+        # c._facecolors2d=c._facecolors3d
+        # c._edgecolors2d=c._edgecolors3d
+    ax2.set_xlabel('d', fontsize=16)
+    ax2.set_ylabel("$b_{0,m}$", fontsize=16)
+    ax2.set_zlabel('P', fontsize=16)    
+    # ax2.legend()
+    plt.tight_layout()
+    # plt.show()
     plt.savefig("Psurface_br{0}_mu{0}.png".format(b0_r, mu_))
+    
+    
+    
+    
     
     
     
