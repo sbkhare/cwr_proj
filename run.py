@@ -159,10 +159,10 @@ if P_SURFACE_PLOT == 1:
     
     
     fig = plt.figure(figsize=(7, 3), dpi=80)
-    u_list = np.arange(0.0001, 0.0005, 0.0001)
+    u_list = np.arange(0.0001, 0.0009, 0.0002)
     br_list = np.arange(0.01, 0.05, 0.01)
     ax1 = fig.add_subplot(1, 2, 1, projection='3d')
-    ax1.text2D(-0.1, 1.15, s="a", transform=ax1.transAxes, fontsize=16, fontweight='bold', va='top', ha='right')
+    ax1.text2D(-0.1, 1.1, s="a", transform=ax1.transAxes, fontsize=16, fontweight='bold', va='top', ha='right')
     for k, u in enumerate(u_list):
         P_grid = np.zeros((len(d_list), len(bm_list)), dtype=float)
         for i, bm in enumerate(bm_list):
@@ -182,7 +182,7 @@ if P_SURFACE_PLOT == 1:
     ax1.set_zlabel('P', fontsize=16)
     # ax1.legend()
     ax2 = fig.add_subplot(1, 2, 2, projection='3d')
-    ax2.text2D(1.5, 1.15, "b", transform=ax1.transAxes, fontsize=16, fontweight='bold', va='top', ha='right')
+    ax2.text2D(1.5, 1.1, "b", transform=ax1.transAxes, fontsize=16, fontweight='bold', va='top', ha='right')
     for k, br in enumerate(br_list):
         P_grid = np.zeros((len(d_list), len(bm_list)), dtype=float)
         for i, bm in enumerate(bm_list):
@@ -203,7 +203,7 @@ if P_SURFACE_PLOT == 1:
     # ax2.legend()
     plt.tight_layout()
     # plt.show()
-    plt.savefig("Psurface_br{0}_mu{0}.png".format(b0_r, mu_))
+    # plt.savefig("Psurface.png")
     
     
     
