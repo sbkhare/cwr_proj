@@ -104,10 +104,12 @@ class community():
         self.J_t[stepnumber] = J
     
     def simulate_ddb(self):
+        print("Total community size at t=0: ", np.sum(self.N_t[:,0]))
         for i, species in enumerate(list(self.species_vector)):
             self.species_vector[i] = self.N_t[i,0]*[self.b0_res]
         for i in range(1, self.timesteps+1):
             self.step_ddb(i)
+        print("Total community size at the end: ", np.sum(self.N_t[:,-1]))
             
     def plot(self, save=False):
         plt.figure()
@@ -120,18 +122,21 @@ class community():
         if save:
             plt.savefig("single_run/All_N_t.png")
     
-    def RAC(self, t, save=False):
-        plt.figure()
+    def RAC(self, times, panel, save=False):
+        fig = plt.figure()
+        ax = fig.add_subplot(1,1,1)
         rank = np.arange(1, len(self.K)+1)
-        abundance = self.N_t[:,t]
-        plt.plot(rank, sorted(abundance, reverse=True), 'r', linewidth=5)
-        plt.title("Rank abundance Curve, t=" + str(t))
-        plt.xlabel("Rank")
-        plt.ylabel("Abundance")
-        plt.yscale("log")
+        ax.text(-0.1, 1.15, panel, transform=ax.transAxes, fontsize=16, fontweight='bold', va='top', ha='right')
+        for t in times:
+            abundance = self.N_t[:,t]
+            ax.plot(rank, sorted(abundance, reverse=True), linewidth=5, label="t = {0}".format(t))
+            ax.set_xlabel("Rank")
+            ax.set_ylabel("Abundance")
+            ax.set_yscale("log")
+        ax.legend()
         #Fit beta distribution here
         if save:
-            plt.savefig("single_run/rac{0}.png".format(t))
+            plt.savefig("single_run/rac.png")
         
     def species_abundance(self, t, save=False):
         ###NEEED TO REWRITE############
@@ -233,6 +238,19 @@ class community():
         plt.ylabel("Number of extinctions")
         if save:
             plt.savefig("single_run/extinction_debt.png")
+            
+    def extinction_debt(self, title, panel, col, save=False):
+        fig=plt.figure()
+        ax = fig.add_subplot(1,1,1)
+        ax.text(-0.1, 1.15, panel, transform=ax.transAxes, fontsize=16, fontweight='bold', va='top', ha='right')
+        ax.set_title(title)
+        ext_times = list(self.extinction_time.values())
+        ext_times = list(filter(lambda a: a != 0, ext_times))
+        ax.hist(ext_times, color=col, bins=np.arange(0, self.timesteps, 5))
+        plt.xlabel("Time")
+        plt.ylabel("Number of extinctions")
+        if save:
+            plt.savefig("single_run/extinction_debt_{0}.png".format(title))
         
 #    def compare_rankabundance(self):
 #        N_0 = []

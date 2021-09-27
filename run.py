@@ -14,10 +14,10 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib as mpl
 
 
-SINGLE_RUN = 0
+SINGLE_RUN = 1
 BETA_DISTR = 0
 SURVIVALPROB = 0
-P_SURFACE_PLOT = 1
+P_SURFACE_PLOT = 0
 
 
 def F(n, Q):
@@ -66,10 +66,10 @@ if SINGLE_RUN == 1:
 #    N_vec = K_global*np.ones(num_species, dtype=int) 
     
 #    Lognormal
-#    N_vec = np.random.lognormal(4.15, 2, num_species) #5, 2
+    N_vec = np.random.lognormal(3, 2, num_species) #5, 2
     
     #Beta
-    N_vec = K_global*np.random.beta(0.2498, 41.4668, num_species)
+    # N_vec = K_global*np.random.beta(0.2498, 41.4668, num_species)
     
     #Turn N_vec into K_vec
     K_vec = b0_m*N_vec/(b0_m - d_all)
@@ -82,12 +82,6 @@ if SINGLE_RUN == 1:
 #     c.plot_diversity(save=True)
 #     c.mutation_extinction(save=True)
 # #    c.compare_rankabundance()
-#     c.RAC(0, save=True)
-#     c.RAC(50, save=True)
-#     c.RAC(100, save=True)
-#     c.RAC(150, save=True)
-#     c.RAC(200, save=True)
-# #    c.RAC(250)
 #     c.species_abundance(0, save=True)
 #     c.species_abundance(50, save=True)
 #     c.species_abundance(100, save=True)
