@@ -243,7 +243,7 @@ class community():
         fig=plt.figure()
         ax = fig.add_subplot(1,1,1)
         ax.text(-0.1, 1.15, panel, transform=ax.transAxes, fontsize=16, fontweight='bold', va='top', ha='right')
-        ax.set_title(title)
+        # ax.set_title(title)
         ext_times = list(self.extinction_time.values())
         ext_times = list(filter(lambda a: a != 0, ext_times))
         ax.hist(ext_times, color=col, bins=np.arange(0, self.timesteps, 5))

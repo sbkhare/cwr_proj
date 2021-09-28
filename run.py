@@ -55,21 +55,21 @@ def calc_survival_prob(b0_res, b0_mut, d, mu, save=False):
 if SINGLE_RUN == 1:
     b0_r = 0.05
     b0_m = 0.6 #0.2, 0.4, 0.6, 0.8
-    d_all = 1-np.exp(-0.1)
-    mu_all = 1-np.exp(-0.0002)
+    d_all = 0.1 #1-np.exp(-0.1)
+    mu_all = 0.0002 #1-np.exp(-0.0002)
     
     num_species = 167
     
-    K_global = 16936#750 # #106 #
+    K_global = 169360#750 # #106 #
     
     #Same K
 #    N_vec = K_global*np.ones(num_species, dtype=int) 
     
 #    Lognormal
-    N_vec = np.random.lognormal(3, 2, num_species) #5, 2
+    # N_vec = np.random.lognormal(5, 2, num_species) #1.2706*3, 1.2706,
     
     #Beta
-    # N_vec = K_global*np.random.beta(0.2498, 41.4668, num_species)
+    N_vec = K_global*np.random.beta(0.2498, 41.4668, num_species)
     
     #Turn N_vec into K_vec
     K_vec = b0_m*N_vec/(b0_m - d_all)
@@ -88,7 +88,9 @@ if SINGLE_RUN == 1:
 #     c.species_abundance(150, save=True)
 #     c.species_abundance(200, save=True)
 # #    c.species_abundance(250)
-    c.plot_fig2([0,50,100,150,200], save=True)
+    # c.plot_fig2([0,50,100,150,200], save=True)
+    # c.extinction_debt("beta", "b", "orange", save=True)
+    c.RAC([0,50,100,150,200], "a", save=True)
     
     
     
