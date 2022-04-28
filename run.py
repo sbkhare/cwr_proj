@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Dec 17 17:00:53 2020
-
-@author: Sikander
+@author: Sikander Khare (s.khare@ufl.edu)
+Department of Biology, University of Florida
+Gainesville, FL 32608
 """
 
 import cwr_model as cwr
@@ -76,7 +76,7 @@ if SINGLE_RUN == 1:
     K_vec = K_vec.astype(int)
     
     c = cwr.community(K=K_vec, timesteps=200, change="b", dd="b", r=d_all, res=b0_r, mut=b0_m, mu=mu_all)
-    c.simulate_ddb()
+    c.simulate()
     
 #     c.plot(save=True)
 #     c.plot_diversity(save=True)
@@ -88,7 +88,7 @@ if SINGLE_RUN == 1:
 #     c.species_abundance(150, save=True)
 #     c.species_abundance(200, save=True)
 # #    c.species_abundance(250)
-    # c.plot_fig2([0,50,100,150,200], save=True)
+    # c.plot_fig1([0,50,100,150,200], save=True)
     # c.extinction_debt("beta", "b", "orange", save=True)
     c.RAC([0,50,100,150,200], "a", save=True)
     
